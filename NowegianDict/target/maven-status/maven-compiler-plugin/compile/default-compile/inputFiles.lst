@@ -1,0 +1,13 @@
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\threads\Extractor.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\services\HttpService.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\app\MainBuilder.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\utils\DictShared.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\threads\Downloader.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\threads\AbstractThread.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\services\SQLiteService.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\data\Dictionary.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\data\VisitHash.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\data\DictItem.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\threads\BuildDictionary.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\services\LogService.java
+C:\Users\wxlfr_000\workspace\NowegianDict\src\main\java\no\dict\threads\ParentThread.java
