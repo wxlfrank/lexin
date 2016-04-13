@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html ng-app="NorskDictApp">
+<head>
+    <!--
+    Customize this policy to fit your own app's needs. For more guidance, see:
+        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+    Some notes:
+        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+            * Enable inline JS: add 'unsafe-inline' to default-src
+    -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/Console.js"></script>
+    <script type="text/javascript" src="js/File.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/SQLiteService.js"></script>
+    <script type="text/javascript" src="js/NorDictController.js"></script>
+    <title>Hello World</title>
+</head>
+<body ng-controller="NorskDictCtrl">
+<div class="appConsole">Console</div>
+<div id="searcharea">
+    <div id="searchbox">
+        <i class="fa fa-search vmiddel" ng-click="queryDict()"></i>
+        <input type="text" class="searchinput vmiddel" placeholder="Search...." ng-model="word"
+               ng-change="querySuggestions()"/>
+        <i class="fa fa-times vmiddel" ng-show="word.length > 0" ng-click="resetWord()"></i>
+    </div>
+</div>
+<div id="suggestions" ng-show="suggestions.length > 0 && queryResults.length === 0">
+    <div ng-repeat="item in suggestions" ng-click="onSelectSuggest(item)">
+        <span class="word">{{item.word}}</span>
+        <span class="explain">{{item.explain}}</span>
+    </div>
+</div>
+<div id="result" ng-show="queryResults.length > 0 && suggestions.length === 0">
+    <div class="list-group-item" ng-repeat="item in queryResults">
+        <div class="list-group-item-heading">
+            <div class="word">{{item.word}}</div>
+            <div>
+                <span class="pronunciation" ng-show="item.syllabel.length > 0">{{item.syllabel}}</span>
+                <span class="pronunciation" ng-show="item.sound.length > 0">{{item.sound}}</span>
+                <span class="type" ng-show="item.clazz.length > 0">{{item.clazz}}</span>
+            </div>
+            <div class="examples" ng-show="item.format.length > 0">{{item.format}}</div>
+        </div>
+        <section class="explain_section">
+            <div class="section_head">Definition of {{item.word}}</div>
+            <div class="list-group-item-text explain">
+                <span>{{item.explain}}</span>
+            </div>
+        </section>
+        <section class="examples_section" ng-show="item.examples.length > 0">
+            <div class="section_head">Examples</div>
+            <ul class="examples">
+                <li ng-repeat="example in item.examples">{{example}}</li>
+            </ul>
+        </section>
+    </div>
+</div>
+
+
+</body>
+</html>
