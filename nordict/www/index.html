@@ -42,9 +42,9 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/Console.js"></script>
     <script type="text/javascript" src="js/File.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/SQLiteService.js"></script>
     <script type="text/javascript" src="js/NorDictController.js"></script>
     <title>Hello World</title>
@@ -68,24 +68,42 @@
 <div id="result" ng-show="queryResults.length > 0 && suggestions.length === 0">
     <div class="list-group-item" ng-repeat="item in queryResults">
         <div class="list-group-item-heading">
-            <div class="word">{{item.word}}</div>
+            <div class="word">{{item.word}}<i class="fa tool" ng-class="item.favorite == true ? 'fa-heart' : 'fa-heart-o'" ng-click="favorite(item)"></i></div>
             <div>
-                <span class="pronunciation" ng-show="item.syllabel.length > 0">{{item.syllabel}}</span>
-                <span class="pronunciation" ng-show="item.sound.length > 0">{{item.sound}}</span>
-                <span class="type" ng-show="item.clazz.length > 0">{{item.clazz}}</span>
+                <span class="syllabel" ng-show="item.syllabel.length > 0 && item.syllabel.indexof('|') > -1">{{item.syllabel}}</span>
+                <span class="sound" ng-show="item.sound.length > 0">{{item.sound}}</span>
+                <span class="clazz" ng-show="item.clazz.length > 0">{{item.clazz}}</span>
             </div>
-            <div class="examples" ng-show="item.format.length > 0">{{item.format}}</div>
+            <div class="format" ng-show="item.format.length > 0">{{item.format}}</div>
+            <div class="alter" ng-show="item.alternatives.length > 0"><span class="tag">Alternativer</span>
+                {{item.alternatives}}
+            </div>
         </div>
-        <section class="explain_section">
-            <div class="section_head">Definition of {{item.word}}</div>
+        <section>
+            <div class="tag">Forklaring</div>
             <div class="list-group-item-text explain">
                 <span>{{item.explain}}</span>
             </div>
         </section>
-        <section class="examples_section" ng-show="item.examples.length > 0">
-            <div class="section_head">Examples</div>
+        <section ng-show="item.examples.length > 0">
+            <div class="tag">Eksempler</div>
             <ul class="examples">
                 <li ng-repeat="example in item.examples">{{example}}</li>
+            </ul>
+        </section>
+        <section ng-show="item.phrases.length > 0">
+            <div class="tag">Uttrykk</div>
+            <ul>
+                <li ng-repeat="phrase in item.phrases">
+                    <div class="tag">{{phrase[0]}}</div>
+                    <span class="uttrykk">{{phrase[1]}}</span>
+                </li>
+            </ul>
+        </section>
+        <section ng-show="item.composite.length > 0">
+            <div class="tag">Sammensetninger</div>
+            <ul class="uttrykk">
+                <li ng-repeat="compo in item.composite"> {{compo}}</li>
             </ul>
         </section>
     </div>

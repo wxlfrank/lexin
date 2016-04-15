@@ -184,7 +184,9 @@ var fileService = function () {
 function downloadDB() {
     var sqliteDir = cordova.file.applicationStorageDirectory;
     var databasePath = "databases/dict.db";
-    fileService.getFile(sqliteDir, databasePath, null, function dirNotExist(error) {
+    fileService.getFile(sqliteDir, databasePath, function(entry){
+        initDB();
+    }, function dirNotExist(error) {
         if (appConsole == null) {
             appConsole = new Console($("body>.appConsole:first"));
         }
@@ -197,6 +199,7 @@ function downloadDB() {
             function (entry) {
                 appConsole.print("Database download successfully to " + entry.toURL());
                 appConsole.element.hide(5000);
+                initDB();
             },
             function (error) {
                 appConsole.print("Error happens when downloading database from " + error.source + " to " + error.target);

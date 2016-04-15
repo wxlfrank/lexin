@@ -1,8 +1,7 @@
 function onDeviceReady() {
-    appConsole.print("Device is ready!")
+    appConsole.print("Device is ready!");
     downloadDB();
     appConsole.print("Download database!")
-    initDB();
 }
 document.addEventListener("deviceReady", onDeviceReady, false);
 function onDOMReady() {

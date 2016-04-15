@@ -10,6 +10,7 @@ body {
     background: #f7f7f7;
     font-family: Helvetica, "Open Sans", Arial;
     color: #000000;
+    font-size: 1.5em;
 }
 
 #suggestions::-webkit-scrollbar-track
@@ -66,7 +67,7 @@ body {
     box-shadow: inset 0 0.1em #e5e7ed, 0 0.1em 0 #fcfcfc;
 }
 .appConsole{
-    display: none;
+    /*display: none;*/
     position: fixed;
     bottom:1em;
     word-wrap: break-word;
@@ -86,7 +87,6 @@ body {
     text-align: center;
     color: #3879D8;
     width:10vw;
-    font-size: 1.5em;
     /*line-height: 1.8em;*/
 }
 #searchbox>i:first-child{
@@ -99,7 +99,6 @@ body {
     width: 68vw;
     outline: none;
     border: none;
-    font-size: 1.5em;
 }
 
 #result{
@@ -134,16 +133,17 @@ body {
 #result section{
     margin: 1em auto;
 }
+/*
 #result .section_head{
-    font-size: 1.5em;
     font-weight: bold;
     color: white;
     background-color: #3879D8;
     border-radius: 1em;
     padding: 0 0.5em;
 }
+*/
 
-#result .pronunciation, #result .type, #result .explain, #result .examples{
+#suggestions .word, .tag, .searchinput, #searchbox>i, #result .sound, #result .clazz, #result .explain, #result .examples, #result .uttrykk{
     font-size: 1.5em !important;
 }
 
@@ -151,13 +151,17 @@ body {
     padding: 0 1em;
 
 }
-#result .pronunciation{
-    padding: 0 0.5em;
+#result .sound{
+    padding-right: 0.5em;
 }
 
 #result .examples{
     font-style: italic;
     padding: 0 1.5em;
+}
+
+#result .format{
+    font-style: italic;
 }
 
 #suggestions{
@@ -182,29 +186,22 @@ body {
 #suggestions >div:hover{
     color: white;
     background-color: #3879D8;
+    border-radius: 1em;
 }
 
-#suggestions >div:hover .word{
-    border-right: solid 0.1em white;
-}
-
-#suggestions >div:first-child:hover {
-    border-radius: 1em 1em 0 0;
-}
-
-#suggestions >div:last-child:hover {
-    border-radius: 0 0 1em 1em;
-}
-
-#suggestions .word{
+#suggestions >div, .tag{
     padding-left: 0.5em;
     padding-right: 0.5em;
     margin-left: 0;
-    color: white;
-    background-color: #3879D8;
-    font-weight: bold;
+    color: #3879D8;
+}
+.tool{
+    float: right;
+    color: #3879D8;
     font-size: 1.5em;
-    /*border-right: solid 0.1em #3879D8;*/
+}
+#suggestions .word{
+    font-weight: bold;
 }
 
 #suggestions >div{
