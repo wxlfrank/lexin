@@ -10,8 +10,13 @@ function initDB() {
 }
 
 var createFavorite = function(db){
-    db.executeSql("create table if not exists 'favorite' (word text not null, explain text not null, primary key(word, explain));", [], function(){
-        appConsole.print("create table 'favorite' successfully");
+    db.sqlBatch([
+        "create table if not exists 'favorite' (word text not null, explain text not null, primary key(word, explain));",
+        "create table if not exists 'history' (word text not null, explain text not null, primary key(word, explain));",
+        "create table if not exists 'mydict' (word text not null, explain text not null, myexplain text not null, primary key(word, explain));"
+        ],
+        function(){
+        appConsole.print("create tables 'favorite' and 'mydict' successfully");
     }, function(e){
         appConsole.print(e.message);
     });
@@ -20,7 +25,14 @@ var createFavorite = function(db){
 
 function DictItem(word, explain) {
     this.word = word;
-    this.explain = explain;
+    this.explain = splitToArray(explain);
+    if(this.explain.length > 0 && this.explain[0].indexOf(";") != -1){
+        var array = this.explain;
+        this.explain = array[0].split(";");
+        for(var index = 1; index < array.length; ++index){
+            this.explain.push(array[index]);
+        }
+    }
 }
 
 var splitToArray = function(str){
@@ -54,7 +66,7 @@ app.service('SQLiteService', function () {
         if (word == null || word.length == 0)
             return null;
         var table = word.substr(0, 1);
-        if (table.match(/[a-z]/).length > 0)
+        if(!!(table.match(/[a-z]/)))
             return table;
         return "other";
     };
@@ -62,9 +74,15 @@ app.service('SQLiteService', function () {
         if (dictionary == null) return;
         var table = getTableName(word.toLowerCase());
         if (table == null) return;
-        dictionary.executeSql(getSQL(table), [], success, function (e) {
-            if (appConsole != null)
+        var sql = getSQL(table);
+        if(sql.length > 0)
+        dictionary.executeSql(sql, [], success, function (e) {
+            if (appConsole != null) {
+                appConsole.show();
+                appConsole.clear();
                 appConsole.print(e.message);
+                appConsole.hide();
+            };
         });
     };
     this.query = function (word, results, success) {
@@ -88,7 +106,7 @@ app.service('SQLiteService', function () {
             if(!!success)
                 success();
         }, function (table) {
-            return "select * from '" + table + "' where word='" + word + "' and explain='" + explain + "';";
+            return "select * from '" + table + "' where word='" + word + "' and explain like '" + explain + "%';";
         });
     };
     this.query_suggest = function (word, results, success) {
@@ -114,7 +132,7 @@ app.service('SQLiteService', function () {
             var favorite;
             for(var index in results){
                 var item = results[index];
-                item.favorite = !!(favorites[item.word + "|" + item.explain]);
+                item.favorite = !!(favorites[item.word + "|" + item.explain[0]]);
             }
             if(!!success)
                 success();
@@ -122,14 +140,49 @@ app.service('SQLiteService', function () {
             return "select * from 'favorite' where word like '" + word + "%' order by word limit 50;";
         });
     };
+    this.queryMyDict = function (word, results, success) {
+        perform(word, function(res){
+            var favorites = {};
+            for(var index = 0; index < res.rows.length; ++index){
+                var row = res.rows.item(index);
+                favorites[getField(row, "word") + "|" + getField(row, "explain")] = getField(row, "myexplain");
+            }
+            var favorite;
+            for(var index in results){
+                var item = results[index];
+                item.myDict = favorites[item.word + "|" + item.explain[0]];
+                if(item.myDict == null) item.myDict = "";
+            }
+            if(!!success)
+                success();
+        }, function (table) {
+            return "select * from 'mydict' where word like '" + word + "%' order by word limit 50;";
+        });
+    };
     this.deleteFavorite = function(item, success){
         perform(item.word, success, function (table) {
-            return "delete from 'favorite' where word='" + item.word + "' and explain='" + item.explain + "';";
+            return "delete from 'favorite' where word='" + item.word + "' and explain='" + item.explain[0] + "';";
         });
     };
     this.addFavorite = function(item, success){
         perform(item.word, success, function (table) {
-            return "insert into 'favorite' values('" + item.word + "', '" + item.explain + "');";
+            return "insert into 'favorite' values('" + item.word + "', '" + item.explain[0] + "');";
+        });
+    };
+    this.saveToMyDict = function(item, success){
+        perform(item.word, success, function (table) {
+            if(item.myDict.length == 0){
+                if(item.tempDict.length > 0){
+                    return "insert into 'mydict' values('" + item.word + "', '" + item.explain[0] + "', '" + item.tempDict + "');";
+                }
+            }else{
+                if(item.tempDict.length > 0) {
+                    return "update 'mydict' set myexplain='" + item.tempDict + "' where word='" + item.word + "' and explain = '" + item.explain[0] + "';";
+                } else {
+                    return "delete from 'mydict' where word='" + item.word + "' and explain= '" + item.explain[0] + "';"
+                }
+            }
+            return "";
         });
     };
 });

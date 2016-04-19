@@ -26,6 +26,15 @@ function Console(element) {
             }
         }
     };
+    this.show = function(){
+      this.element.show();
+    };
+    this.hide = function(){
+        this.element.hide(5000);
+    };
+    this.clear = function(){
+        this.element.html("");
+    };
 }
 var appConsole = null;
 

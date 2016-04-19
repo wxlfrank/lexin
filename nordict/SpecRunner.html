@@ -7,22 +7,98 @@
   <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.4.1/jasmine_favicon.png">
   <link rel="stylesheet" href="lib/jasmine-2.4.1/jasmine.css">
 
-  <script src="lib/jasmine-2.4.1/jasmine.js"></script>
-  <script src="lib/jasmine-2.4.1/jasmine-html.js"></script>
-  <script src="lib/jasmine-2.4.1/boot.js"></script>
-  <script src="www/js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="www/css/index.css">
+    <link rel="stylesheet" type="text/css" href="www/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="www/css/font-awesome.min.css">
 
-  <!-- include source files here... -->
-  <script src="www/js/SQLiteService.js"></script>
-  <script src="www/js/Console.js"></script>
+    <script type="text/javascript" src="www/cordova.js"></script>
+    <script type="text/javascript" src="www/js/jquery.min.js"></script>
+    <script type="text/javascript" src="www/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="www/js/angular.min.js"></script>
+    <script type="text/javascript" src="www/js/index.js"></script>
+    <script type="text/javascript" src="www/js/Console.js"></script>
+    <script type="text/javascript" src="www/js/File.js"></script>
+    <script type="text/javascript" src="www/js/SQLiteService.js"></script>
+    <script type="text/javascript" src="www/js/NorDictController.js"></script>
 
 
   <!-- include spec files here... -->
   <script src="spec/getInterpretation.js"></script>
 
+
 </head>
 
 <body>
-<div class="appConsole">Console</div>
+<!--<div class="appConsole">Console</div>-->
+<!--<i class="fa fa-search" id="searchbutton"></i>-->
+<!--<div class="container center">-->
+  <!--<i class="fa fa-apple vmiddel"></i>-->
+  <!--<i class="fa fa-android vmiddel"></i>-->
+<!--</div>-->
+<!--<div class="ucontainer center">-->
+  <!--<i class="fa fa-apple big vmiddle"></i>-->
+  <!--<i class="fa fa-android vmiddle"></i>-->
+<!--</div>-->
+
+<!--<div class="container center">-->
+  <!--<div class="ucontainer center vmiddel">-->
+    <!--<i class="fa fa-apple big vmiddle"></i>-->
+    <!--<i class="fa fa-android vmiddle"></i>-->
+  <!--</div>-->
+<!--</div>-->
+
+<!--<div class="container center">-->
+  <!--<div class="ucontainer center vmiddel">-->
+    <!--<span class="big vmiddle">报道说，毛泽东时代，高尔夫被斥为“百万富翁的运动”受到禁止；1980/90年代高尔夫运动曾一度复兴，又在习近平主席的反腐败运动中于2015年成为中共8500万党员不准参加的运动。-->
+<!--“共产党领导人本周似乎从对此运动的谴责中退后了一步。”-->
+<!--《卫报》引述中纪委网站上的一篇文章说，“既然高尔夫只是一项运动，打高尔夫球也就无所谓对与错。 </span>-->
+    <!--<span class="vmiddle">ddddddddddddddddddddddddddddddddd</span>-->
+  <!--</div>-->
+<!--</div>-->
+
+<!--<div style="border: solid 0.1em black; margin-bottom: 1em; height: 4em;">-->
+  <!--<input type="text" class="searchinput vmiddel" style="border: solid 0.1em blue; font-size: 1.2em;"/></div>-->
+
+<!--<div id="searchbox">-->
+  <!--&lt;!&ndash;<i class="fa fa-arrow-left vmiddel" ng-show="index > 0" ng-click="back()"></i>&ndash;&gt;-->
+  <!--&lt;!&ndash;<i class="fa fa-arrow-right " ng-show="index >= 0 && index < trace.length - 1" ng-click="forward()"></i>&ndash;&gt;-->
+  <!--&lt;!&ndash;<i class="fa fa-search vmiddel" ng-click="queryDict()"></i>&ndash;&gt;-->
+  <!--&lt;!&ndash;<i class="fa fa-arrow-left vmiddel"></i>&ndash;&gt;-->
+  <!--&lt;!&ndash;<i class="fa fa-arrow-right vmiddel"></i>&ndash;&gt;-->
+  <!--&lt;!&ndash;<i class="fa fa-search vmiddel"></i>&ndash;&gt;-->
+  <!--<input type="text" class=" vmiddel" placeholder="Search...." ng-model="word"-->
+         <!--ng-change="querySuggestions()" ng-keyup="waitforEnter($event)"/>-->
+  <!--&lt;!&ndash;<i class="fa fa-times vmiddel" ng-show="word.length > 0" ng-click="resetWord()"></i>&ndash;&gt;-->
+<!--</div>-->
+
+<!--<div id="searcharea">
+  <div id="searchbox">
+    &lt;!&ndash;<i class="fa fa-arrow-left vmiddel" ng-show="index > 0" ng-click="back()"></i>&ndash;&gt;
+    &lt;!&ndash;<i class="fa fa-arrow-right " ng-show="index >= 0 && index < trace.length - 1" ng-click="forward()"></i>&ndash;&gt;
+    &lt;!&ndash;<i class="fa fa-search vmiddel" ng-click="queryDict()"></i>&ndash;&gt;
+    &lt;!&ndash;<i class="fa fa-arrow-left vmiddel"></i>&ndash;&gt;
+    &lt;!&ndash;<i class="fa fa-arrow-right vmiddel"></i>&ndash;&gt;
+    &lt;!&ndash;<i class="fa fa-search vmiddel"></i>&ndash;&gt;
+    <input type="text" class="vmiddel" placeholder="Search...." ng-model="word"
+           ng-change="querySuggestions()" ng-keyup="waitforEnter($event)"/>
+    &lt;!&ndash;<i class="fa fa-times vmiddel" ng-show="word.length > 0" ng-click="resetWord()"></i>&ndash;&gt;
+  </div>
+</div>-->
+
+<div id="result1">
+    <div  class="list-group-item" style="border: solid 0.1em blue;"></div>
+</div>
+
+<div  id="searcharea">
+    <div id="searchbox">
+        <i class="fa fa-arrow-left vmiddel"></i>
+        <i class="fa fa-arrow-right vmiddel"></i>
+        <i class="fa fa-search vmiddel"></i>
+        <i class="fa fa-times vmiddel righticon"></i>
+        <div class="resizeable vmiddel">
+            <input type="text" class="searchinput" placeholder="Search...."/>
+        </div>
+    </div>
+</div>
 </body>
 </html>
