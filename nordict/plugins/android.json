@@ -8,18 +8,18 @@
     },
     "installed_plugins": {
         "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "org.dict.nordict"
-        },
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "org.dict.nordict"
+            "PACKAGE_NAME": "org.lexin"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "org.dict.nordict"
+            "PACKAGE_NAME": "org.lexin"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "org.lexin"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-file": {
-            "PACKAGE_NAME": "org.dict.nordict"
+            "PACKAGE_NAME": "org.lexin"
         }
     }
 }
