@@ -21,11 +21,14 @@ public class Downloader extends ParentThread {
 		List<Thread> unfinished;
 		String word;
 
-		public DownloadThread(String word, BlockingQueue<Document> forExtractor, List<Thread> unfinished) {
+		public DownloadThread(String word, BlockingQueue<Document> forExtractor, List<Thread> children) {
 			this.word = word;
 			this.forExtractor = forExtractor;
-			this.unfinished = unfinished;
-			this.unfinished.add(DownloadThread.this);
+			this.unfinished = children;
+			synchronized (this.unfinished) {
+				this.unfinished.add(DownloadThread.this);
+				unfinished.notifyAll();
+			}
 		}
 		private static final int count = 10;
 		public void run() {
@@ -75,7 +78,7 @@ public class Downloader extends ParentThread {
 					hash.setVisited(word);
 					break;
 				}
-				synchronized (hash) {
+				synchronized (extractor.getChildren()) {
 					try {
 						if (extractor.getState() == Thread.State.WAITING || extractor.getChildren().size() != 0)
 							wait(WAIT_TIME);
@@ -91,7 +94,7 @@ public class Downloader extends ParentThread {
 			monitor();
 			if(!word.isEmpty()){
 				waitForLessChildren();
-				Thread child = new DownloadThread(word, downloaded, running);
+				Thread child = new DownloadThread(word, downloaded, children);
 				child.start();
 			}
 			/**

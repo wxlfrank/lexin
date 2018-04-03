@@ -5,18 +5,18 @@ import java.util.List;
 
 public abstract class ParentThread extends AbstractThread {
 
-	protected List<Thread> running = new ArrayList<Thread>();
+	protected List<Thread> children = new ArrayList<Thread>();
 
 	public List<Thread> getChildren() {
-		return running;
+		return children;
 	}
 
 	public void waitChildren() {
-		synchronized (running) {
-			while (!running.isEmpty()) {
+		synchronized (children) {
+			while (!children.isEmpty()) {
 				try {
-					threadMessage("has " + running.size() + " children threads running!");
-					running.wait();
+					threadMessage("has " + children.size() + " children threads running!");
+					children.wait();
 				} catch (InterruptedException e) {
 				}
 			}
@@ -24,10 +24,10 @@ public abstract class ParentThread extends AbstractThread {
 	}
 
 	public void waitForLessChildren() {
-		synchronized (running) {
-			while (running.size() > QUEUE_SIZE) {
+		synchronized (children) {
+			while (children.size() > QUEUE_SIZE) {
 				try {
-					running.wait();
+					children.wait();
 				} catch (InterruptedException e) {
 					interrupted = true;
 				}

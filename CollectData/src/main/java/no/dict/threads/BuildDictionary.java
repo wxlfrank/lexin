@@ -7,6 +7,7 @@ package no.dict.threads;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -30,6 +31,7 @@ public class BuildDictionary extends AbstractThread {
     Visit hash table used to record which words are visited and which words are not visited.
      */
     private final VisitHash hash = new VisitHash();
+    private final Map<String, Object> config = new HashMap<String, Object>();
     private final int QUEUE_SIZE = 32;
 
     BlockingQueue<Document> downloadBuffer = new ArrayBlockingQueue<Document>(QUEUE_SIZE);
@@ -61,6 +63,7 @@ public class BuildDictionary extends AbstractThread {
      */
     public void initVisitHash(){
         try {
+        	System.out.println("Loading words from words.txt");
             BufferedReader reader = new BufferedReader(new FileReader("words.txt"));
             String line = reader.readLine();
             while ((line = reader.readLine()) != null) {
@@ -77,6 +80,7 @@ public class BuildDictionary extends AbstractThread {
      */
     public void loadData() {
     	SQLiteService.loadVisitHash(hash);
+    	SQLiteService.loadConfig(config);
     	SQLiteService.loadWords(dict.getWords());
     }
     
@@ -89,7 +93,7 @@ public class BuildDictionary extends AbstractThread {
                 threadMessage("Preparing shutting!");
                 BuildDictionary.this.stopChildren();
                 threadMessage("Save to database");
-                storeData();
+                saveData();
 				threadMessage("Save to database finished");
                 threadMessage("Now, the crawler can be safely shut down!");
             }
@@ -121,7 +125,7 @@ public class BuildDictionary extends AbstractThread {
 	/**
      * Store data into database
      */
-    public void storeData() {
+    public void saveData() {
     	SQLiteService.saveVisitHash(hash);
     	SQLiteService.saveDictItem(dict.getWords());
     }

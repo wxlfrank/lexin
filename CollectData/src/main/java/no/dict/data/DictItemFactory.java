@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import no.dict.services.LogService;
 import no.dict.utils.Constants;
 
 public class DictItemFactory {
@@ -43,6 +44,7 @@ public class DictItemFactory {
 			Pattern.UNICODE_CHARACTER_CLASS);
 	private static final Map<String, KEYWORD_INDEX> KEYWORDS = new HashMap<String, KEYWORD_INDEX>();
 	static {
+		LogService.log.warning(OPPSLAGSORD);
 		KEYWORDS.put(OPPSLAGSORD, KEYWORD_INDEX.OPPSLAGSORD);
 		KEYWORDS.put(BØYNING, KEYWORD_INDEX.BØYNING);
 		KEYWORDS.put(ALTERNATIV, KEYWORD_INDEX.ALTERNATIV);
@@ -65,11 +67,12 @@ public class DictItemFactory {
 			String first_two_words = null;
 			if (matcher.matches())
 				first_two_words = matcher.group(1);
+			for(String key : KEYWORDS.keySet()){
+				LogService.log.warning(key);
+			}
 			KEYWORD_INDEX keyword_index = KEYWORDS.get(first_two_words);
 			if (keyword_index == null) {
-				// System.out.println("------Error: " + str);
 				result.setExamples(result.getExamples() + handleMultiple(item, index, str.substring(BOKMÅL_LENGTH)));
-				// System.out.println(result.examples);
 				continue;
 			}
 			switch (keyword_index) {
@@ -80,7 +83,7 @@ public class DictItemFactory {
 				if (fields.length != 3) {
 					result.setExplain(fields[1]);
 				} else {
-					result.setSound(fields[1]);
+					result.setSound(fields[1].replaceAll(" /", "/"));
 					result.setClazz(fields[2]);
 				}
 				break;

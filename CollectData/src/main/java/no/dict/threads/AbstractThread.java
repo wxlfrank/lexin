@@ -28,12 +28,13 @@ public abstract class AbstractThread extends Thread {
 		}
 	}
 
-	public boolean waitThreadFinish(Thread thread) {
+	public boolean waitThreadFinish(ParentThread thread) {
 		while (thread.isAlive()) {
 			try {
 				threadMessage("waiting " + thread.getName() + " to finish");
 				thread.join();
 			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 		return true;

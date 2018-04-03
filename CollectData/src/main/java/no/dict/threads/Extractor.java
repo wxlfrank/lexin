@@ -24,7 +24,10 @@ public class Extractor extends ParentThread {
 			this.hash = hash;
 			this.dict = dict;
 			this.unfinished = unfinished;
-			this.unfinished.add(ExtractorThread.this);
+			synchronized (this.unfinished) {
+				this.unfinished.add(ExtractorThread.this);
+				this.unfinished.notifyAll();
+			}
 		}
 
 
@@ -33,7 +36,7 @@ public class Extractor extends ParentThread {
 				List<DictItem> items = JSoupService.getDictItems(doc);
 				for (DictItem item : items) {
 					String word = item.getWord();
-					if (word.isEmpty() || item.getExplain().isEmpty()) {
+					if (word.isEmpty() && item.getExplain().isEmpty()) {
 							dict.putIntoError(item);
 					} else {
 						int index = word.indexOf(Constants.LINE);
@@ -77,7 +80,7 @@ public class Extractor extends ParentThread {
 				break;
 			} else {
 				waitForLessChildren();
-				Thread child = new ExtractorThread(doc, hash, dict, running);
+				Thread child = new ExtractorThread(doc, hash, dict, children);
 				child.start();
 			}
 		}

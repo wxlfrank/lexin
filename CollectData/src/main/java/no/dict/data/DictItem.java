@@ -13,6 +13,7 @@ import no.dict.utils.Constants;
  */
 public class DictItem {
 
+	private int id = 0;
 	private String alternative = "";
 
 	private String clazz = "";
@@ -202,6 +203,14 @@ public class DictItem {
 		if (!url.isEmpty())
 			builder.append("url: " + url).append(Constants.LINE);
 		return builder.toString();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

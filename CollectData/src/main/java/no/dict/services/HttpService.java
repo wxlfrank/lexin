@@ -84,8 +84,9 @@ public class HttpService {
 			URLConnection con = new URL(url).openConnection();
 			con.addRequestProperty("User-Agent",
 					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0");
+			con.setRequestProperty("Accept-Charset", "UTF-8");
 			StringBuilder stringBuilder = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line);
@@ -304,7 +305,7 @@ public class HttpService {
 		try {
 			word = URLEncoder.encode(word, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			System.out.println(word);
+			e.printStackTrace();
 		}
 		return "http://lexin.udir.no/?search=" + word + "&dict=nbo-prs-maxi" + "&ui-lang=NBO" + "&startingfrom=" + from
 				+ "&count=" + count + "&search-type=search-both" + "&checked-languages=NBO" + "&checked-languages=PRS"

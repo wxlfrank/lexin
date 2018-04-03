@@ -30,6 +30,7 @@ public class LogService {
 			Files.createDirectories(path);
 			path = path.resolve("log.txt");
 			FileHandler handle = new FileHandler(path.toString());
+			handle.setEncoding("UTF-8");
 			handle.setFormatter(new SimpleFormatter());
 			log.addHandler(handle);
 		} catch (SecurityException e) {

@@ -70,10 +70,6 @@ public class JSoupService {
 			cur.removeIf(FILTER);
 			items.add(cur);
 		}
-		// for(List<String> item : items){
-		// System.out.println(String.join(Constants.LINE, item));
-		// System.out.println("-------------------------------------");
-		// }
 		return items;
 	}
 
@@ -103,8 +99,7 @@ public class JSoupService {
 		for (List<String> item : items) {
 			DictItem cur = DictItemFactory.getDictItem(item);
 			if (cur != null) {
-				if (!cur.getError().isEmpty())
-					cur.setURL(document.baseUri().toString());
+				cur.setURL(document.baseUri().toString());
 				results.add(cur);
 			}
 		}

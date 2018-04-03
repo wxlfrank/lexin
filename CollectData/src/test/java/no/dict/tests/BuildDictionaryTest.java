@@ -33,7 +33,7 @@ public class BuildDictionaryTest extends TestCase{
 			e.printStackTrace();
 		}
 		builder.stopChildren();
-		builder.storeData();
+		builder.saveData();
 		Map<String, DictItem> newDict = builder.getWords();
 		Map<String, DictItem> another = new HashMap<String, DictItem>();
 		SQLiteService.loadWords(another);

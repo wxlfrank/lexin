@@ -34,9 +34,17 @@ public class Dictionary {
             value.add(item);
     }
     
+    private int id = 0;
+    public synchronized void setId(int id){
+    	this.id = id;
+    }
+    public synchronized int getId(){
+    	return id;
+    }
     public synchronized  void putIntoWords(DictItem item){
+    	item.setId(id++);
         String key = item.getWord() + "|" + item.getExplain();
-        if(words.get(key) != null) {
+        if(words.get(key) == null) {
             words.put(key, item);
             if (!item.getError().isEmpty())
                 putIntoError(item);
