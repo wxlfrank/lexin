@@ -7,12 +7,10 @@ public abstract class AbstractThread extends Thread {
 	public static int QUEUE_SIZE = 32;
 	public static long WAIT_TIME = 2000;
 
-	public static void threadMessage(String message) {
-		String threadName = Thread.currentThread().getName();
-		System.out.format("%s %s%n", threadName, message);
+	public void threadMessage(String message) {
+		System.out.format("%s: %s%n", getName(), message);
 	}
 
-	protected boolean interrupted = false;
 
 	long time1 = System.currentTimeMillis();
 
@@ -20,7 +18,7 @@ public abstract class AbstractThread extends Thread {
 	/**
 	 * monitor which thread is running every 5 seconds
 	 */
-	public void monitor() {
+	public synchronized void  monitor() {
 		time2 = System.currentTimeMillis();
 		if (time2 - time1 > 5000) {
 			threadMessage("is running");
@@ -28,7 +26,7 @@ public abstract class AbstractThread extends Thread {
 		}
 	}
 
-	public boolean waitThreadFinish(ParentThread thread) {
+	public boolean waitThreadFinish(GroupThread thread) {
 		while (thread.isAlive()) {
 			try {
 				threadMessage("waiting " + thread.getName() + " to finish");
@@ -37,6 +35,7 @@ public abstract class AbstractThread extends Thread {
 				e.printStackTrace();
 			}
 		}
+		threadMessage(thread.getName() + " has finished");
 		return true;
 	}
 
@@ -50,7 +49,6 @@ public abstract class AbstractThread extends Thread {
 				q.put(s);
 				success = true;
 			} catch (InterruptedException e) {
-				interrupted = true;
 			}
 		} while (!success);
 	}
@@ -68,7 +66,6 @@ public abstract class AbstractThread extends Thread {
 				result = q.take();
 				success = true;
 			} catch (InterruptedException e) {
-				interrupted = false;
 			}
 		} while (!success);
 		return result;

@@ -10,8 +10,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Assert;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+//import junit.framework.TestCase;
 import no.dict.data.DictItem;
 import no.dict.services.SQLiteService;
 import no.dict.threads.BuildDictionary;
@@ -20,8 +21,9 @@ import no.dict.threads.BuildDictionary;
  *
  * @author wxlfr_000
  */
-public class BuildDictionaryTest extends TestCase{
+public class BuildDictionaryTest{
 
+	@Test
 	public void testDB(){
 		BuildDictionary builder = new BuildDictionary();
 		builder.initVisitHash();

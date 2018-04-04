@@ -6,27 +6,14 @@
 package no.dict.services;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import no.dict.data.DictItem;
 
 /**
  *
@@ -34,7 +21,7 @@ import no.dict.data.DictItem;
  */
 public class HttpService {
 	public static final String NL = String.format("%n");
-	static Object lock = new ReentrantLock();
+	/* static Object lock = new ReentrantLock(); */
 
 	/**
 	 * Return the dictionary items from a html file
@@ -43,7 +30,7 @@ public class HttpService {
 	 *            a html file
 	 * @return
 	 */
-	public static List<DictItem> getDictItems(Document doc) {
+	/* public static List<DictItem> getDictItems(Document doc) {
 		List<Map<String, List<String>>> raw = getRawData(doc);
 		List<DictItem> results = new ArrayList<DictItem>();
 		for (Map<String, List<String>> iter : raw) {
@@ -55,7 +42,7 @@ public class HttpService {
 			}
 		}
 		return results;
-	}
+	} */
 
 	/**
 	 * Return a parsed document from a downloaded html file for a url
@@ -64,13 +51,13 @@ public class HttpService {
 	 * @return
 	 */
 	public static Document getDocument(String url) {
-		Document obj = null;
-		String html = HttpService.getDocumentFromWeb(url);
+		Document document = null;
+		String html = HttpService.getContent(url);
 		if (html != null)
-			obj = Jsoup.parse(html);
-		if (obj != null)
-			obj.setBaseUri(url);
-		return obj;
+			document = Jsoup.parse(html);
+		if (document != null)
+			document.setBaseUri(url);
+		return document;
 	}
 
 	/**
@@ -79,27 +66,44 @@ public class HttpService {
 	 * @param url
 	 * @return
 	 */
-	private static String getDocumentFromWeb(String url) {
+	private static String getContent(String url) {
+		URLConnection connection = null;
 		try {
-			URLConnection con = new URL(url).openConnection();
-			con.addRequestProperty("User-Agent",
-					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0");
-			con.setRequestProperty("Accept-Charset", "UTF-8");
-			StringBuilder stringBuilder = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+			connection = new URL(url).openConnection();
+		} catch (Exception e) {
+			return null;
+		}
+		connection.addRequestProperty("User-Agent",
+				"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0");
+		connection.setRequestProperty("Accept-Charset", "UTF-8");
+
+		BufferedReader reader = null;
+		int count = 5;
+		while (reader == null) {
+			if (count == 0)
+				return null;
+			try {
+				reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+			} catch (Exception e) {
+				--count;
+				e.printStackTrace();
+			}
+		}
+
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line);
 				stringBuilder.append(NL);
 			}
 			reader.close();
-			if (stringBuilder.length() == 0)
-				return null;
-			return stringBuilder.toString();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		if (stringBuilder.length() == 0)
+			return null;
+		return stringBuilder.toString();
 	}
 
 	/**
@@ -109,14 +113,14 @@ public class HttpService {
 	 *            the html file
 	 * @return
 	 */
-	public static Elements getExplainDivs(Document doc) {
+	/* public static Elements getExplainDivs(Document doc) {
 		return doc.select("#tblHitsTable tr");
 	}
-
+	
 	public static String getURL(String word, int from) {
 		return "http://lexin.udir.no/?search=" + word + "&dict=nbo-prs-maxi&ui-lang=NBO&startingfrom=" + from
 				+ "&count=10&search-type=search-both&checked-languages=NBO&checked-languages=PRS&checked-languages=B";
-	}
+	} */
 
 	/**
 	 * Return whether a html file has next link
@@ -136,13 +140,13 @@ public class HttpService {
 	 * @param add
 	 * @return
 	 */
-	private static String append(String pre, String add) {
+	/* private static String append(String pre, String add) {
 		if (pre.isEmpty()) {
 			return add;
 		} else {
 			return pre + "|" + add;
 		}
-	}
+	} */
 
 	/**
 	 * Return a dictionary from a raw data
@@ -150,7 +154,7 @@ public class HttpService {
 	 * @param item
 	 * @return
 	 */
-	private static DictItem getDictItem(Map<String, List<String>> item) {
+	/* private static DictItem getDictItem(Map<String, List<String>> item) {
 		DictItem result = new DictItem();
 		result.setError(toString(item.get("error")));
 		String word = toString(item.get("oppslagsord"));
@@ -166,7 +170,7 @@ public class HttpService {
 			else
 				result.setClazz(headers[i]);
 		}
-
+	
 		String explain = toString(item.get("forklaring"));
 		if (explain.isEmpty()) {
 			result.setError(append(result.getError(), "forklaring->"));
@@ -212,11 +216,11 @@ public class HttpService {
 			}
 		}
 		return result;
-	}
+	} */
 
-	private static String getLabel(Element div) {
+	/* private static String getLabel(Element div) {
 		return getString(div.children().get(0), ">span");
-	}
+	} */
 
 	/**
 	 * Return the raw data: string -> list of string from a html file
@@ -225,12 +229,12 @@ public class HttpService {
 	 *            the html file
 	 * @return
 	 */
-	private static List<Map<String, List<String>>> getRawData(Document doc) {
+	/* private static List<Map<String, List<String>>> getRawData(Document doc) {
 		List<Map<String, List<String>>> results = new ArrayList<Map<String, List<String>>>();
 		Elements divs = getExplainDivs(doc);
 		if (divs.isEmpty())
 			return results;
-
+	
 		Map<String, List<String>> cur = null;
 		Iterator<Element> iter = divs.iterator();
 		Element element = null;
@@ -268,23 +272,23 @@ public class HttpService {
 			preValues.add(value);
 		}
 		return results;
-	}
+	} */
+	/* 
+		private static String getString(Element div, String selector) {
+			Element first = div;
+			if (!selector.isEmpty()) {
+				Elements elements = div.select(selector);
+				if (elements.isEmpty())
+					return null;
+				first = elements.first();
+			}
+			String str = first.text().trim();
+			return str.replaceAll(" *([,;\\]])", "$1");
+		} */
 
-	private static String getString(Element div, String selector) {
-		Element first = div;
-		if (!selector.isEmpty()) {
-			Elements elements = div.select(selector);
-			if (elements.isEmpty())
-				return null;
-			first = elements.first();
-		}
-		String str = first.text().trim();
-		return str.replaceAll(" *([,;\\]])", "$1");
-	}
-
-	private static String getValue(Element div) {
+	/* private static String getValue(Element div) {
 		return getString(div.children().get(1), "");
-	}
+	} */
 
 	/**
 	 * Reform a list of string
@@ -292,14 +296,14 @@ public class HttpService {
 	 * @param list
 	 * @return
 	 */
-	private static String toString(List<String> list) {
+	/* private static String toString(List<String> list) {
 		if (list == null)
 			return "";
 		for (String iter : list) {
 			iter = iter.replaceAll("\\|", "&#124;");
 		}
 		return list.stream().collect(Collectors.joining("|"));
-	}
+	} */
 
 	public static String getURL(String word, int from, int count) {
 		try {

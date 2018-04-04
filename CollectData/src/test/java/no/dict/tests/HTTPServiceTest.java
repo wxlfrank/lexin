@@ -1,12 +1,6 @@
 package no.dict.tests;
 
-import org.jsoup.nodes.Document;
-import org.junit.Assert;
-
-import junit.framework.TestCase;
-import no.dict.services.HttpService;
-
-public class HTTPServiceTest extends TestCase{
+public class HTTPServiceTest{
 
 //	public Map<String, DictItem> getHash(String table) throws SQLException{
 //		Map<String, DictItem> hash = new HashMap<String, DictItem>();
@@ -31,12 +25,13 @@ public class HTTPServiceTest extends TestCase{
 //		return hash;
 //	}
 	
+	/* @Test
 	public void testDocumentHasNext(){
 		Document doc = HttpService.getDocument(HttpService.getURL("poeng", 0));
 		Assert.assertTrue(HttpService.hasNext(doc));
 		doc = HttpService.getDocument(HttpService.getURL("skylder", 0));
 		Assert.assertTrue(HttpService.hasNext(doc));
-	}
+	} */
 	
 //	public void testGetItemFromDocument(){
 //		Document doc = HttpService.getDocument(HttpService.getURL("pluss", 0));

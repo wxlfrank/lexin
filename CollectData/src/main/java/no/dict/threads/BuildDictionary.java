@@ -117,7 +117,7 @@ public class BuildDictionary extends AbstractThread {
      * Wait for the children threads finishing
      */
 	public void stopChildren() {
-        downloader.interrupt();
+        downloader.setFinished();
         waitThreadFinish(downloader);
         waitThreadFinish(extractor);
     }

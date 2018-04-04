@@ -97,10 +97,11 @@ public class JSoupService {
 		List<List<String>> items = JSoupService.getItems(document);
 		List<DictItem> results = new ArrayList<DictItem>();
 		for (List<String> item : items) {
-			DictItem cur = DictItemFactory.getDictItem(item);
-			if (cur != null) {
-				cur.setURL(document.baseUri().toString());
-				results.add(cur);
+			for (DictItem cur : DictItemFactory.getDictItem(item)) {
+				if (cur != null) {
+					cur.setURL(document.baseUri().toString());
+					results.add(cur);
+				}
 			}
 		}
 		return results;

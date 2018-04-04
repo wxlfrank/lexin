@@ -39,7 +39,7 @@ public class WorkflowTest {
 			List<List<String>> items = JSoupService.getItems(document);
 			List<DictItem> results = new ArrayList<DictItem>();
 			for (List<String> item : items) {
-				results.add(DictItemFactory.getDictItem(item));
+				results.addAll(DictItemFactory.getDictItem(item));
 			}
 			searched += items.size();
 			if (JSoupService.hasNext(document))
@@ -48,8 +48,6 @@ public class WorkflowTest {
 				break;
 			System.out.println("-----------" + page ++);
 		} while (true);
-//		System.out.println(expected);
-//		System.out.println(searched);
 		Assert.assertTrue(expected >= searched);
 	
 	}

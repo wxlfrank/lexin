@@ -1,5 +1,6 @@
 package no.dict.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,23 +12,31 @@ import no.dict.utils.Constants;
 
 public class DictItemFactory {
 	private static final String BOKMÅL = "Bokmål ";
+	private static final int BOKMÅL_LENGTH = BOKMÅL.length();
+	private static final String ENGELSK = "Engelsk ";
+	private static final String ENGELSK_OPPSLAGSORD = ENGELSK + "oppslagsord ";
+	private static final int ENGELSK_OPPSLAGSORD_LENGTH = ENGELSK_OPPSLAGSORD.length();
 	private static final String OPPSLAGSORD = BOKMÅL + "oppslagsord ";
 	private static final int OPPSLAGSORD_LENGTH = OPPSLAGSORD.length();
-	private static final String ENGELSK = "Engelsk ";
 	private static final String BØYNING = BOKMÅL + "bøyning ";
 	private static final int BØYNING_LENGTH = BØYNING.length();
 	private static final String FORKLARING = BOKMÅL + "forklaring ";
 	private static final int FORKLARING_LENGTH = FORKLARING.length();
+	private static final String ENGELSK_FORKLARING = ENGELSK + "forklaring ";
+	private static final int ENGELSK_FORKLARING_LENGTH = ENGELSK_FORKLARING.length();
 	private static final String EKSEMPEL = BOKMÅL + "eksempel ";
 	private static final int EKSEMPEL_LENGTH = EKSEMPEL.length();
-	private static final int BOKMÅL_LENGTH = BOKMÅL.length();
 	private static final String SAMMENSETNING = BOKMÅL + "sammensetning ";
 	private static final int SAMMENSETNING_LENGTH = SAMMENSETNING.length();
 	private static final String ALTERNATIV = BOKMÅL + "alternativ ";
 	private static final int ALTERNATIV_LENGTH = ALTERNATIV.length();
 	private static final String KOMMENTAR = BOKMÅL + "kommentar ";
 	private static final int KOMMENTAR_LENGTH = KOMMENTAR.length();
+	private static final String ENGELSK_KOMMENTAR = ENGELSK + "kommentar ";
+	private static final int ENGELSK_KOMMENTAR_LENGTH = ENGELSK_KOMMENTAR.length();
 	private static final String TILLEGGSFORKLARING = BOKMÅL + "tilleggsforklaring ";
+	private static final String ENGELSK_TILLEGGSFORKLARING = ENGELSK + "tilleggsforklaring ";
+	private static final int ENGELSK_TILLEGGSFORKLARING_LENGTH = ENGELSK_TILLEGGSFORKLARING.length();
 	private static final int TILLEGGSFORKLARING_LENGTH = TILLEGGSFORKLARING.length();
 	private static final String GRAMMATIKK = BOKMÅL + "grammatikk ";
 	private static final String ENGELSK_GRAMMATIKK = ENGELSK + "grammatikk ";
@@ -35,31 +44,39 @@ public class DictItemFactory {
 	private static final int ENGELSK_GRAMMATIKK_LENGTH = ENGELSK_GRAMMATIKK.length();
 	private static final String UTTRYKK = BOKMÅL + "uttrykk ";
 	private static final int UTTRYKK_LENGTH = UTTRYKK.length();
+	private static final Pattern SEARCHEDMATCHER = Pattern.compile("(.*) \\(\"([^\"\\(\\)]*)\"\\)");
 
 	private static enum KEYWORD_INDEX {
-		OPPSLAGSORD, BØYNING, ALTERNATIV, GRAMMATIKK, ENGELSK_GRAMMATIKK, KOMMENTAR, TILLEGGSFORKLARING, FORKLARING, SAMMENSETNING, EKSEMPEL, UTTRYKK
+		OPPSLAGSORD, ENGELSK_OPPSLAGSORD, BØYNING, ALTERNATIV, GRAMMATIKK, ENGELSK_GRAMMATIKK, KOMMENTAR,
+		TILLEGGSFORKLARING, ENGELSK_TILLEGGSFORKLARING, FORKLARING, ENGELSK_FORKLARING, SAMMENSETNING, EKSEMPEL,
+		UTTRYKK, ENGELSK_KOMMENTAR
 	}
 
-	private static final Pattern LINE = Pattern.compile("([\\p{Alpha}åøæÅØÆ]+ [\\p{Alpha}åøæÅØÆ]+ )[\\s\\S]*",
+	private static final Pattern LINE = Pattern.compile("([\\p{Alpha}|åøæÅØÆ]+ [\\p{Alpha}|åøæÅØÆ]+ )[\\s\\S]*",
 			Pattern.UNICODE_CHARACTER_CLASS);
 	private static final Map<String, KEYWORD_INDEX> KEYWORDS = new HashMap<String, KEYWORD_INDEX>();
 	static {
-		LogService.log.warning(OPPSLAGSORD);
 		KEYWORDS.put(OPPSLAGSORD, KEYWORD_INDEX.OPPSLAGSORD);
+		KEYWORDS.put(ENGELSK_OPPSLAGSORD, KEYWORD_INDEX.ENGELSK_OPPSLAGSORD);
 		KEYWORDS.put(BØYNING, KEYWORD_INDEX.BØYNING);
 		KEYWORDS.put(ALTERNATIV, KEYWORD_INDEX.ALTERNATIV);
 		KEYWORDS.put(GRAMMATIKK, KEYWORD_INDEX.GRAMMATIKK);
 		KEYWORDS.put(ENGELSK_GRAMMATIKK, KEYWORD_INDEX.ENGELSK_GRAMMATIKK);
 		KEYWORDS.put(KOMMENTAR, KEYWORD_INDEX.KOMMENTAR);
+		KEYWORDS.put(ENGELSK_KOMMENTAR, KEYWORD_INDEX.ENGELSK_KOMMENTAR);
 		KEYWORDS.put(TILLEGGSFORKLARING, KEYWORD_INDEX.TILLEGGSFORKLARING);
+		KEYWORDS.put(ENGELSK_TILLEGGSFORKLARING, KEYWORD_INDEX.ENGELSK_TILLEGGSFORKLARING);
 		KEYWORDS.put(FORKLARING, KEYWORD_INDEX.FORKLARING);
+		KEYWORDS.put(ENGELSK_FORKLARING, KEYWORD_INDEX.ENGELSK_FORKLARING);
 		KEYWORDS.put(SAMMENSETNING, KEYWORD_INDEX.SAMMENSETNING);
 		KEYWORDS.put(EKSEMPEL, KEYWORD_INDEX.EKSEMPEL);
 		KEYWORDS.put(UTTRYKK, KEYWORD_INDEX.UTTRYKK);
 	}
 
-	public static DictItem getDictItem(List<String> item) {
+	public static List<DictItem> getDictItem(List<String> item) {
+		List<DictItem> results = new ArrayList<DictItem>();
 		DictItem result = new DictItem();
+		results.add(result);
 		Index index = new Index(0);
 		for (; index.value < item.size(); index.value++) {
 			String str = item.get(index.value);
@@ -67,12 +84,16 @@ public class DictItemFactory {
 			String first_two_words = null;
 			if (matcher.matches())
 				first_two_words = matcher.group(1);
-			for(String key : KEYWORDS.keySet()){
+			for (String key : KEYWORDS.keySet()) {
 				LogService.log.warning(key);
 			}
 			KEYWORD_INDEX keyword_index = KEYWORDS.get(first_two_words);
 			if (keyword_index == null) {
-				result.setExamples(result.getExamples() + handleMultiple(item, index, str.substring(BOKMÅL_LENGTH)));
+				String uformelt = handleMultiple(item, index, str);
+				if (first_two_words != null || !str.equals("Bokmål uformelt")){
+					System.out.println(uformelt);
+					result.setExamples(result.getExamples() + uformelt);
+				}
 				continue;
 			}
 			switch (keyword_index) {
@@ -87,17 +108,21 @@ public class DictItemFactory {
 					result.setClazz(fields[2]);
 				}
 				break;
+			case ENGELSK_OPPSLAGSORD:
+				result.setWord(result.getWord() + str.substring(ENGELSK_OPPSLAGSORD_LENGTH));
+				break;
 			// } else if (str.startsWith(BØYNING)) {
 			case BØYNING:
-				result.setFormat(str.substring(BØYNING_LENGTH));
+				result.setFormat(handleMultiple(item, index, BOKMÅL + str.substring(BØYNING_LENGTH)));
 				break;
 			// } else if (str.startsWith(ALTERNATIV)) {
 			case ALTERNATIV:
-				result.setAlternative(handleMultiple(item, index, str.substring(ALTERNATIV_LENGTH)));
+				result.setAlternative(handleMultiple(item, index, BOKMÅL + str.substring(ALTERNATIV_LENGTH)));
 				break;
 			// } else if (str.startsWith(GRAMMATIKK)) {
 			case GRAMMATIKK:
-				result.setGrammer(handleMultiple(item, index, str.substring(GRAMMATIKK_LENGTH)));
+				result.setGrammer(
+						result.getGrammer() + handleMultiple(item, index, BOKMÅL + str.substring(GRAMMATIKK_LENGTH)));
 				break;
 			// } else if (str.startsWith(ENGELSK_GRAMMATIKK)) {
 			case ENGELSK_GRAMMATIKK:
@@ -105,28 +130,88 @@ public class DictItemFactory {
 				break;
 			// } else if (str.startsWith(KOMMENTAR)) {
 			case KOMMENTAR:
-				result.setComment(str.substring(KOMMENTAR_LENGTH) + getEnglish(item, index));
+				result.setComment(
+						result.getComment() + BOKMÅL + str.substring(KOMMENTAR_LENGTH) + getEnglish(item, index));
+				break;
+			// } else if (str.startsWith(ENGELSK_KOMMENTAR)) {
+			case ENGELSK_KOMMENTAR:
+				result.setComment(result.getComment() + ENGELSK + str.substring(ENGELSK_KOMMENTAR_LENGTH)
+						+ getEnglish(item, index));
 				break;
 			// } else if (str.startsWith(TILLEGGSFORKLARING)) {
 			case TILLEGGSFORKLARING:
-				result.setExplain(
-						result.getExplain() + str.substring(TILLEGGSFORKLARING_LENGTH) + getEnglish(item, index));
+				result.setExplain(result.getExplain() + BOKMÅL + str.substring(TILLEGGSFORKLARING_LENGTH)
+						+ getEnglish(item, index));
+				break;
+			// } else if (str.startsWith(ENGELSK_TILLEGGSFORKLARING)) {
+			case ENGELSK_TILLEGGSFORKLARING:
+				result.setExplain(result.getExplain() + ENGELSK + str.substring(ENGELSK_TILLEGGSFORKLARING_LENGTH)
+						+ getEnglish(item, index));
 				break;
 			// } else if (str.startsWith(FORKLARING)) {
 			case FORKLARING:
-				result.setExplain(result.getExplain() + str.substring(FORKLARING_LENGTH) + getEnglish(item, index));
+				result.setExplain(
+						result.getExplain() + BOKMÅL + str.substring(FORKLARING_LENGTH) + getEnglish(item, index));
+				break;
+			// } else if (str.startsWith(FORKLARING)) {
+			case ENGELSK_FORKLARING:
+				result.setExplain(result.getExplain() + ENGELSK + str.substring(ENGELSK_FORKLARING_LENGTH)
+						+ getEnglish(item, index));
 				break;
 			// } else if (str.startsWith(SAMMENSETNING)) {
 			case SAMMENSETNING:
-				result.setComposite(handleMultiple(item, index, str.substring(SAMMENSETNING_LENGTH)));
+				result.setComposite(handleMultiple(item, index, BOKMÅL + str.substring(SAMMENSETNING_LENGTH)));
 				break;
 			// } else if (str.startsWith(EKSEMPEL)) {
 			case EKSEMPEL:
-				result.setExamples(result.getExamples() + handleMultiple(item, index, str.substring(EKSEMPEL_LENGTH)));
+				result.setExamples(
+						result.getExamples() + handleMultiple(item, index, BOKMÅL + str.substring(EKSEMPEL_LENGTH)));
 				break;
 			// } else if (str.startsWith(UTTRYKK)) {
 			case UTTRYKK:
-				result.setPhrases(handleMultiple(item, index, str.substring(UTTRYKK_LENGTH)));
+				String phrasesString = handleMultiple(item, index, BOKMÅL + str.substring(UTTRYKK_LENGTH));
+				try {
+					String[] phrases = phrasesString.split(Constants.LINE);
+					for (int iter = 0; iter < phrases.length;) {
+						String phrase = "", explain = "", temp = phrases[iter];
+						DictItem additional = null;
+						if (temp.startsWith(BOKMÅL)) {
+							additional = new DictItem();
+							temp = temp.substring(BOKMÅL_LENGTH);
+							matcher = SEARCHEDMATCHER.matcher(temp);
+							if (matcher.matches()) {
+								phrase += BOKMÅL + matcher.group(1);
+								explain += BOKMÅL + matcher.group(2);
+							} else {
+								phrase += BOKMÅL + temp;
+							}
+						}
+						++iter;
+						if (additional != null) {
+							while (iter < phrases.length) {
+								temp = phrases[iter];
+								if (temp.startsWith(BOKMÅL)) {
+									break;
+								}
+								matcher = SEARCHEDMATCHER.matcher(temp);
+								if (matcher.matches()) {
+									phrase += Constants.LINE + matcher.group(1);
+									explain += Constants.LINE + matcher.group(2);
+								} else {
+									explain += Constants.LINE + temp;
+								}
+								++iter;
+							}
+							additional.setWord(phrase);
+							additional.setExplain(explain);
+							results.add(additional);
+						}
+					}
+					result.setPhrases(phrasesString);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 				break;
 			// } else {
 			default:
@@ -134,7 +219,7 @@ public class DictItemFactory {
 				break;
 			}
 		}
-		return result;
+		return results;
 	}
 
 	private static String getEnglish(List<String> item, Index index) {
@@ -163,7 +248,7 @@ public class DictItemFactory {
 		for (; start.value < item.size(); ++start.value) {
 			String next = item.get(start.value);
 			if (isMultiple(next)) {
-				result += Constants.LINE + next.substring(BOKMÅL_LENGTH) + getEnglish(item, start);
+				result += Constants.LINE + next + getEnglish(item, start);
 			} else {
 				break;
 			}
