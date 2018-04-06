@@ -117,17 +117,17 @@ app.controller('NorskDictCtrl', function ($scope, SQLiteService) {
     };
     $scope.onSelectSuggest = function (suggest) {
         $scope.suggestions.length = 0;
-        $scope.word = suggest.word;
-        SQLiteService.query_exact(suggest.word, suggest.explain[0], $scope.queryResults, function () {
+        $scope.word = suggest.word.real;
+        SQLiteService.query_exact(suggest.word.orginal, suggest.explain, $scope.queryResults, function () {
             if($scope.queryResults.length > 0){
                 $scope.index++;
                 $scope.trace.length = $scope.index;
                 $scope.trace.push($scope.queryResults[0]);
             }
-            SQLiteService.queryFavorite($scope.word, $scope.queryResults, function(){
+            SQLiteService.queryFavorite(suggest.word.orginal, $scope.queryResults, function(){
                 $scope.$apply();
             });
-            SQLiteService.queryMyDict($scope.word, $scope.queryResults, function(){
+            SQLiteService.queryMyDict(suggest.word.orginal, $scope.queryResults, function(){
                 $scope.$apply();
             });
         });

@@ -16,7 +16,9 @@ public class WorkflowTest {
 
 	@Test
 	public void testWorkFlow() {
-		String[] words = {"annen", "meg", "jeg", "pluss"};
+		String[] words = {"Alt går"
+//				, "meg", "jeg", "pluss"
+				};
 		for(String word : words){
 			testWord(word);
 		}
@@ -42,11 +44,11 @@ public class WorkflowTest {
 				results.addAll(DictItemFactory.getDictItem(item));
 			}
 			searched += items.size();
+			System.out.println(word + "-----------" + page ++);
 			if (JSoupService.hasNext(document))
 				from += count;
 			else
 				break;
-			System.out.println("-----------" + page ++);
 		} while (true);
 		Assert.assertTrue(expected >= searched);
 	

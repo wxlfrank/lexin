@@ -192,7 +192,7 @@ function downloadDB() {
         }
         appConsole.element.show();
         var fileTransfer = new FileTransfer();
-        var uri = encodeURI("https://docs.google.com/uc?id=0B3UhvZT3c8xNUmhiQTYwOFZyWUE&export=download");
+        var uri = encodeURI("https://docs.google.com/uc?id=1iacBQTZ5GtPVlTnzqaSsmRH_9mYP91p7&export=download");
         fileTransfer.download(
             uri,
             sqliteDir + databasePath,

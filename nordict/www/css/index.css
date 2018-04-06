@@ -73,7 +73,7 @@ body {
     position: fixed;
     bottom:1em;
     word-wrap: break-word;
-    text-family: monospace;
+    font-family: monospace;
     background-color: #3879D8;
     text-transform:none;
     padding: 0.5em;
@@ -279,3 +279,36 @@ body {
     /*border-bottom: 0.5em solid #3879D8;*/
     /*top: -1.5em;*/
 /*}*/
+.suggestion {
+    margin: 0 0 2em 0;
+    padding: 0;
+    background-color: #EEE;
+    height: 2em;
+    line-height: 2em;
+}
+
+.suggestion .real {
+    display: inline-block;
+    /* font-size: small; */
+    color: white;
+    padding: 0.0em 0.5em;
+    background-color: #607D8B;
+    /* line-height: 1em; */
+    position: relative;
+    /* left: -1px; */
+    /* top: -4px; */
+    /* height: 1.8em; */
+    /* margin-right: .8em; */
+    border-radius: 4px 0 0 4px;
+}
+
+.language{
+    color: white;
+    background: #607D8B;
+    border-radius: 0 4px   4px 0;
+    padding: 0px 4px;
+    font-weight: 900;
+    display: inline-block;
+    margin-right: 2px;
+    padding: 0.0em 0.5em;
+}

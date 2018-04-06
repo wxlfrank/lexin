@@ -6,6 +6,7 @@
 package no.dict.services;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -78,16 +79,23 @@ public class HttpService {
 		connection.setRequestProperty("Accept-Charset", "UTF-8");
 
 		BufferedReader reader = null;
+		InputStream stream = null;
 		int count = 5;
-		while (reader == null) {
+		while (stream == null) {
 			if (count == 0)
 				return null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+				stream = connection.getInputStream();
 			} catch (Exception e) {
 				--count;
 				e.printStackTrace();
 			}
+		}
+		try {
+			reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+			return null;
 		}
 
 		StringBuilder stringBuilder = new StringBuilder();
@@ -121,17 +129,6 @@ public class HttpService {
 		return "http://lexin.udir.no/?search=" + word + "&dict=nbo-prs-maxi&ui-lang=NBO&startingfrom=" + from
 				+ "&count=10&search-type=search-both&checked-languages=NBO&checked-languages=PRS&checked-languages=B";
 	} */
-
-	/**
-	 * Return whether a html file has next link
-	 * 
-	 * @param document
-	 *            the html file
-	 * @return
-	 */
-	public static boolean hasNext(Document document) {
-		return !document.select("ul.searchPaging>li.next").isEmpty();
-	}
 
 	/**
 	 * append a new value

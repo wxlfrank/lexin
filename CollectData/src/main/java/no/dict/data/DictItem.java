@@ -58,6 +58,7 @@ public class DictItem {
 	}
 
 	public String getComment() {
+		if(!comment.isEmpty()) return comment + Constants.LINE;
 		return comment;
 	}
 
@@ -74,6 +75,7 @@ public class DictItem {
 	}
 
 	public String getExplain() {
+		if(!explain.isEmpty()) return explain + Constants.LINE;
 		return explain;
 	}
 
@@ -82,10 +84,12 @@ public class DictItem {
 	}
 
 	public String getGrammer() {
+		if(!grammer.isEmpty()) return grammer + Constants.LINE;
 		return grammer;
 	}
 
 	public String getPhrases() {
+		if(!phrases.isEmpty()) return phrases + Constants.LINE;
 		return phrases;
 	}
 
@@ -98,6 +102,7 @@ public class DictItem {
 	}
 
 	public String getWord() {
+		if(!word.isEmpty()) return word + Constants.LINE;
 		return word;
 	}
 

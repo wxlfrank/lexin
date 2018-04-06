@@ -44,12 +44,12 @@ public class DictItemFactory {
 	private static final int ENGELSK_GRAMMATIKK_LENGTH = ENGELSK_GRAMMATIKK.length();
 	private static final String UTTRYKK = BOKMÅL + "uttrykk ";
 	private static final int UTTRYKK_LENGTH = UTTRYKK.length();
-	private static final Pattern SEARCHEDMATCHER = Pattern.compile("(.*) \\(\"([^\"\\(\\)]*)\"\\)");
+	private static final Pattern SEARCHEDMATCHER = Pattern.compile("(.*) \\(\"(.*)");
+	private static final Pattern END_TRIM_MATCHER = Pattern.compile("([^\\p{Alpha} åøæÅØÆ]*)(.*)");
+	private static final Pattern EXAMPLE_PHRASE_MATCHER = Pattern.compile("\\(.*\\)([\\s\\S]*)");
 
 	private static enum KEYWORD_INDEX {
-		OPPSLAGSORD, ENGELSK_OPPSLAGSORD, BØYNING, ALTERNATIV, GRAMMATIKK, ENGELSK_GRAMMATIKK, KOMMENTAR,
-		TILLEGGSFORKLARING, ENGELSK_TILLEGGSFORKLARING, FORKLARING, ENGELSK_FORKLARING, SAMMENSETNING, EKSEMPEL,
-		UTTRYKK, ENGELSK_KOMMENTAR
+		OPPSLAGSORD, ENGELSK_OPPSLAGSORD, BØYNING, ALTERNATIV, GRAMMATIKK, ENGELSK_GRAMMATIKK, KOMMENTAR, TILLEGGSFORKLARING, ENGELSK_TILLEGGSFORKLARING, FORKLARING, ENGELSK_FORKLARING, SAMMENSETNING, EKSEMPEL, UTTRYKK, ENGELSK_KOMMENTAR
 	}
 
 	private static final Pattern LINE = Pattern.compile("([\\p{Alpha}|åøæÅØÆ]+ [\\p{Alpha}|åøæÅØÆ]+ )[\\s\\S]*",
@@ -90,9 +90,8 @@ public class DictItemFactory {
 			KEYWORD_INDEX keyword_index = KEYWORDS.get(first_two_words);
 			if (keyword_index == null) {
 				String uformelt = handleMultiple(item, index, str);
-				if (first_two_words != null || !str.equals("Bokmål uformelt")){
-					System.out.println(uformelt);
-					result.setExamples(result.getExamples() + uformelt);
+				if (first_two_words != null || !str.equals("Bokmål uformelt")) {
+					result.setExamples(result.getExamples() + BOKMÅL + uformelt);
 				}
 				continue;
 			}
@@ -100,20 +99,20 @@ public class DictItemFactory {
 			case OPPSLAGSORD:
 				String[] fields = str.substring(OPPSLAGSORD_LENGTH).split(Constants.LINE);
 				result.setSyllabel(fields[0]);
-				result.setWord(fields[0].replaceAll("\\|", "") + getEnglish(item, index));
+				result.setWord(BOKMÅL + fields[0].replaceAll("\\|", "") + getEnglish(item, index));
 				if (fields.length != 3) {
-					result.setExplain(fields[1]);
+					result.setExplain(result.getExplain() + BOKMÅL + fields[1]);
 				} else {
 					result.setSound(fields[1].replaceAll(" /", "/"));
 					result.setClazz(fields[2]);
 				}
 				break;
 			case ENGELSK_OPPSLAGSORD:
-				result.setWord(result.getWord() + str.substring(ENGELSK_OPPSLAGSORD_LENGTH));
+				result.setWord(result.getWord() + ENGELSK + str.substring(ENGELSK_OPPSLAGSORD_LENGTH));
 				break;
 			// } else if (str.startsWith(BØYNING)) {
 			case BØYNING:
-				result.setFormat(handleMultiple(item, index, BOKMÅL + str.substring(BØYNING_LENGTH)));
+				result.setFormat(handleMultiple(item, index, str.substring(BØYNING_LENGTH)));
 				break;
 			// } else if (str.startsWith(ALTERNATIV)) {
 			case ALTERNATIV:
@@ -177,13 +176,18 @@ public class DictItemFactory {
 						DictItem additional = null;
 						if (temp.startsWith(BOKMÅL)) {
 							additional = new DictItem();
-							temp = temp.substring(BOKMÅL_LENGTH);
+							// temp = temp.substring(BOKMÅL_LENGTH);
 							matcher = SEARCHEDMATCHER.matcher(temp);
 							if (matcher.matches()) {
-								phrase += BOKMÅL + matcher.group(1);
-								explain += BOKMÅL + matcher.group(2);
+								phrase += matcher.group(1);
+								String sec = matcher.group(2);
+								matcher = END_TRIM_MATCHER.matcher(new StringBuilder(sec).reverse().toString());
+								if (matcher.matches()) {
+									sec = new StringBuilder(matcher.group(2)).reverse().toString();
+								}
+								explain += sec;
 							} else {
-								phrase += BOKMÅL + temp;
+								phrase += temp;
 							}
 						}
 						++iter;
@@ -196,14 +200,31 @@ public class DictItemFactory {
 								matcher = SEARCHEDMATCHER.matcher(temp);
 								if (matcher.matches()) {
 									phrase += Constants.LINE + matcher.group(1);
-									explain += Constants.LINE + matcher.group(2);
-								} else {
-									explain += Constants.LINE + temp;
+									temp = matcher.group(2);
+									matcher = END_TRIM_MATCHER.matcher(new StringBuilder(temp).reverse().toString());
+									if (matcher.matches()) {
+										temp = new StringBuilder(matcher.group(2)).reverse().toString();
+									}
+
 								}
+								explain += Constants.LINE + (temp.startsWith(ENGELSK) ? "" : ENGELSK) + temp;
 								++iter;
 							}
-							additional.setWord(phrase);
-							additional.setExplain(explain);
+
+							String word = phrase.split(Constants.LINE)[0];
+							String replaced = word.replaceAll(" ?\\([\\p{Alpha} åøæÅØÆ]+\\) ?", " ").trim();
+							if (replaced.length() != word.length()) {
+								additional.setExamples(phrase);
+								word = phrase.replaceAll(" ?\\([\\p{Alpha} åøæÅØÆ]+\\) ?", " ").trim();
+							} else
+								word = phrase;
+							if (word.contains("|")) {
+								additional.setSyllabel(word);
+								word = word.replaceAll("\\|", "");
+							}
+							additional.setWord(word);
+							additional.setExplain(BOKMÅL + explain.replaceAll(" ?\\([\\p{Alpha} åøæÅØÆ]+\\) ?", " ").trim());
+							System.out.println(additional);
 							results.add(additional);
 						}
 					}
@@ -219,6 +240,7 @@ public class DictItemFactory {
 				break;
 			}
 		}
+		System.out.println(result);
 		return results;
 	}
 
