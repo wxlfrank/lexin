@@ -30,7 +30,7 @@ public class BuildDictionaryTest{
 		builder.loadData();
 		builder.createChildren();
 		try {
-			Thread.sleep(20000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -40,7 +40,6 @@ public class BuildDictionaryTest{
 		Map<String, DictItem> another = new HashMap<String, DictItem>();
 		SQLiteService.loadWords(another);
 		for(Entry<String, DictItem> iter : newDict.entrySet()){
-			System.out.println(iter.getKey());
 			Assert.assertNotNull(another.get(iter.getKey()));
 			another.remove(iter.getKey());
 		}

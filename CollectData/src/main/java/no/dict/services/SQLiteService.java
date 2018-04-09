@@ -58,14 +58,16 @@ public class SQLiteService {
 				}
 				stat.executeBatch();
 				connection.commit();
-				connection.close();
 			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			} catch (SQLException e) {
+				e.printStackTrace();
 			} finally {
 				if (connection != null) {
 					try {
 						connection.close();
 					} catch (SQLException e) {
+						e.printStackTrace();
 					}
 				}
 			}
@@ -129,6 +131,7 @@ public class SQLiteService {
 				List<String> old_words = getQueryResult(stat, sql, "word");
 				hash.addAll(index, old_words);
 			}
+			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -156,6 +159,8 @@ public class SQLiteService {
 					words.put(iter.getWord() + "|" + iter.getExplain(), iter);
 				}
 			}
+			connection.close();
+			System.out.println("Finish Load Words");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -306,6 +311,7 @@ public class SQLiteService {
 			result.setError(rs.getString("error"));
 			result.setGrammer(rs.getString("grammer"));
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return null;
 		}
 		return result;
@@ -330,6 +336,7 @@ public class SQLiteService {
 		try {
 			result = stat.executeQuery(sql);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return list;
 		}
 		if (result != null)
@@ -418,6 +425,7 @@ public class SQLiteService {
 					}
 				}
 			}
+			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

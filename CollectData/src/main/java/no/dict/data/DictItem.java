@@ -42,9 +42,6 @@ public class DictItem {
 
 	private String word = "";
 
-	public DictItem() {
-	}
-
 	public String getAlternative() {
 		return alternative;
 	}
@@ -58,7 +55,6 @@ public class DictItem {
 	}
 
 	public String getComment() {
-		if(!comment.isEmpty()) return comment + Constants.LINE;
 		return comment;
 	}
 
@@ -75,7 +71,6 @@ public class DictItem {
 	}
 
 	public String getExplain() {
-		if(!explain.isEmpty()) return explain + Constants.LINE;
 		return explain;
 	}
 
@@ -84,12 +79,10 @@ public class DictItem {
 	}
 
 	public String getGrammer() {
-		if(!grammer.isEmpty()) return grammer + Constants.LINE;
 		return grammer;
 	}
 
 	public String getPhrases() {
-		if(!phrases.isEmpty()) return phrases + Constants.LINE;
 		return phrases;
 	}
 
@@ -102,15 +95,11 @@ public class DictItem {
 	}
 
 	public String getWord() {
-		if(!word.isEmpty()) return word + Constants.LINE;
 		return word;
 	}
 
 	public void setAlternative(String value) {
-		if (alternative.isEmpty())
-			alternative = value;
-		else
-			alternative = alternative + "|" + value;
+		alternative = value;
 	}
 
 	public void setClazz(String clazzFromDocument) {
@@ -118,14 +107,11 @@ public class DictItem {
 	}
 
 	public void setComment(String value) {
-		comment = value;
+		comment = comment.isEmpty() ? value : Constants.LINE + value;
 	}
 
 	public void setComposite(String value) {
-		if (composite.isEmpty())
-			composite = value;
-		else
-			composite = composite + "|" + value;
+		composite = value;
 	}
 
 	public void setError(String error) {
@@ -133,21 +119,15 @@ public class DictItem {
 	}
 
 	public void setError(String key, String value) {
-		if (error.isEmpty())
-			error = key + ":" + value;
-		else
-			error = error + Constants.LINE + value;
+		error = error.isEmpty() ? value : Constants.LINE + value;
 	}
 
 	public void setExamples(String value) {
-		if (examples.isEmpty())
-			examples = value;
-		else
-			examples = examples + "|" + value;
+		examples = examples.isEmpty() ? value : Constants.LINE + value;
 	}
 
 	public void setExplain(String value) {
-		explain = value;
+		explain = explain.isEmpty() ? value : Constants.LINE + value;
 	}
 
 	public void setFormat(String value) {
@@ -155,14 +135,11 @@ public class DictItem {
 	}
 
 	public void setGrammer(String value) {
-		grammer = value;
+		grammer = grammer.isEmpty() ? value : Constants.LINE + value;
 	}
 
 	public void setPhrases(String value) {
-		if (phrases.isEmpty())
-			phrases = value;
-		else
-			phrases = phrases + "|" + value;
+		phrases = phrases.isEmpty() ? value : Constants.LINE + value;
 	}
 
 	public void setSound(String string) {
@@ -177,8 +154,8 @@ public class DictItem {
 		this.url = url;
 	}
 
-	public void setWord(String word) {
-		this.word = word;
+	public void setWord(String value) {
+		word = word.isEmpty() ? value : Constants.LINE + value;
 	}
 
 	public String toString() {

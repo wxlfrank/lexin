@@ -16,15 +16,15 @@ import no.dict.utils.Constants;
 
 public class JSoupService {
 	public static final String NEXT = "ul.searchPaging>li.next";
-	public static final String ITEMS = "table.entriesTable";
+	public static final String ITEMS = "table.entriesTable > tbody";
 	public static final String ITEM_START = "separatorTop";
-	public static final String ITER = "tr";
+	public static final String ITEM_ATTR = "tr";
 	public static final String SEARCHED = "div.searchMatches > p";
 	public static final Pattern SEARCHEDMATCHER = Pattern.compile(".* av ([0-9]*)");
 	public static final Pattern LANGUAGE_START = Pattern.compile("(Bokmål|Engelsk|Dari) .*");
 	public static final String DARI_START = "Dari ";
 
-	public static final Predicate<String> FILTER = new Predicate<String>() {
+	public static final Predicate<String> ITEM_ATTR_FILTER = new Predicate<String>() {
 
 		@Override
 		public boolean test(String text) {
@@ -49,8 +49,8 @@ public class JSoupService {
 		if (tables.size() == 0) {
 			return new ArrayList<List<String>>();
 		}
-		Element table = tables.get(0);
-		Elements iters = table.select(ITER);
+		Element container = tables.get(0);
+		Elements iters = container.select(ITEM_ATTR);
 		List<List<String>> items = new ArrayList<List<String>>();
 		List<String> cur = null;
 		for (Element iter : iters) {
@@ -58,7 +58,7 @@ public class JSoupService {
 				continue;
 			if (iter.hasClass(ITEM_START)) {
 				if (cur != null) {
-					cur.removeIf(FILTER);
+					cur.removeIf(ITEM_ATTR_FILTER);
 					items.add(cur);
 				}
 				cur = new ArrayList<String>();
@@ -67,7 +67,7 @@ public class JSoupService {
 				complement(cur, iter);
 		}
 		if (cur != null) {
-			cur.removeIf(FILTER);
+			cur.removeIf(ITEM_ATTR_FILTER);
 			items.add(cur);
 		}
 		return items;

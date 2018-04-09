@@ -88,7 +88,6 @@ public class HttpService {
 				stream = connection.getInputStream();
 			} catch (Exception e) {
 				--count;
-				e.printStackTrace();
 			}
 		}
 		try {

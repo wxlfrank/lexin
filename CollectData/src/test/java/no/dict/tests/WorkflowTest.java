@@ -17,7 +17,7 @@ public class WorkflowTest {
 	@Test
 	public void testWorkFlow() {
 		String[] words = {"Alt går"
-//				, "meg", "jeg", "pluss"
+				, "meg", "jeg", "pluss"
 				};
 		for(String word : words){
 			testWord(word);

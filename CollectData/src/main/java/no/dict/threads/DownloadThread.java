@@ -25,6 +25,8 @@ class DownloadThread extends GroupItemThread {
 		int from = 0;
 		do {
 			document = HttpService.getDocument(HttpService.getURL(word, from, count));
+			if(document == null)
+				System.out.println("get a document null");
 			putToQueueUntilSuccess(forExtractor, document);
 			if (JSoupService.hasNext(document))
 				from += count;
