@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+.vmiddel {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.righticon {
+  float: right !important;
+}
+
+.resizeable {
+  overflow: hidden;
+  /* margin: 0 0.6em 0 0; */
+}
+i {
+  color: #3879d8;
+}

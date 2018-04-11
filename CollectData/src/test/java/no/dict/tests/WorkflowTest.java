@@ -17,7 +17,7 @@ public class WorkflowTest {
 	@Test
 	public void testWorkFlow() {
 		String[] words = {"Alt går"
-				, "meg", "jeg", "pluss"
+//				, "meg", "jeg", "pluss"
 				};
 		for(String word : words){
 			testWord(word);
@@ -42,6 +42,9 @@ public class WorkflowTest {
 			List<DictItem> results = new ArrayList<DictItem>();
 			for (List<String> item : items) {
 				results.addAll(DictItemFactory.getDictItem(item));
+			}
+			for (DictItem item : results) {
+				System.out.println(item);
 			}
 			searched += items.size();
 			System.out.println(word + "-----------" + page ++);

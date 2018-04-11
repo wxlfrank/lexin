@@ -22,8 +22,6 @@ public abstract class GroupThread extends AbstractThread {
 		synchronized (children) {
 			while (!children.isEmpty()) {
 				try {
-					// if(children.size() == 1)
-					// System.out.println(children.get(0).getName());
 					threadMessage("has " + children.size() + " children threads running!");
 					children.wait();
 				} catch (InterruptedException e) {

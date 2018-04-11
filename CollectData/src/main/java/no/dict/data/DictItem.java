@@ -5,6 +5,11 @@
  */
 package no.dict.data;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import no.dict.utils.Constants;
 
 /**
@@ -13,7 +18,7 @@ import no.dict.utils.Constants;
  */
 public class DictItem {
 
-	private int id = 0;
+//	private int id = 0;
 	private String alternative = "";
 
 	private String clazz = "";
@@ -44,10 +49,6 @@ public class DictItem {
 
 	public String getAlternative() {
 		return alternative;
-	}
-
-	public String getChange() {
-		return format;
 	}
 
 	public String getClazz() {
@@ -151,7 +152,7 @@ public class DictItem {
 	}
 
 	public void setURL(String url) {
-		this.url = url;
+		this.setUrl(url);
 	}
 
 	public void setWord(String value) {
@@ -159,40 +160,33 @@ public class DictItem {
 	}
 
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("word: " + word).append(Constants.LINE);
-		builder.append("syllabel: " + syllabel).append(Constants.LINE);
-		builder.append("sound: " + sound).append(Constants.LINE);
-		builder.append("clazz: " + clazz).append(Constants.LINE);
-		if (!format.isEmpty())
-			builder.append("format: " + format).append(Constants.LINE);
-		if (!grammer.isEmpty())
-			builder.append("grammer: " + grammer).append(Constants.LINE);
-		if (!explain.isEmpty())
-			builder.append("explain: " + explain).append(Constants.LINE);
-		if (!examples.isEmpty())
-			builder.append("examples: " + examples).append(Constants.LINE);
-		if (!phrases.isEmpty())
-			builder.append("phrases: " + phrases).append(Constants.LINE);
-		if (!composite.isEmpty())
-			builder.append("composite: " + composite).append(Constants.LINE);
-		if (!error.isEmpty())
-			builder.append("error: " + error).append(Constants.LINE);
-		if (!alternative.isEmpty())
-			builder.append("alternative: " + alternative).append(Constants.LINE);
-		if (!comment.isEmpty())
-			builder.append("comment: " + comment).append(Constants.LINE);
-		if (!url.isEmpty())
-			builder.append("url: " + url).append(Constants.LINE);
-		return builder.toString();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+		mapper.setSerializationInclusion(Include.NON_EMPTY);
+		try {
+			return mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 
-	public int getId() {
-		return id;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
+//	public int getId() {
+//		return id;
+//	}
+//
+//	public void setId(int id) {
+//		this.id = id;
+//	}
+
+	
 }

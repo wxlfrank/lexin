@@ -44,8 +44,8 @@ public class DictItemFactory {
 	private static final String UTTRYKK = BOKMÅL + "uttrykk ";
 	private static final int UTTRYKK_LENGTH = UTTRYKK.length();
 	private static final Pattern FIRST_MATCH = Pattern.compile("(.*)\\(\"(.*)");
-	private static final Pattern SECOND_MATCH = Pattern.compile("(.*)\"\\)?(.*)");
-	private static final Pattern END_TRIM_MATCHER = Pattern.compile("([^\\p{Alpha} åøæÅØÆ]*)(.*)");
+//	private static final Pattern SECOND_MATCH = Pattern.compile("(.*)\"\\)?(.*)");
+//	private static final Pattern END_TRIM_MATCHER = Pattern.compile("([^\\p{Alpha} åøæÅØÆ]*)(.*)");
 
 	private static enum KEYWORD_INDEX {
 		OPPSLAGSORD, ENGELSK_OPPSLAGSORD, BØYNING, ALTERNATIV, GRAMMATIKK, ENGELSK_GRAMMATIKK, KOMMENTAR, TILLEGGSFORKLARING, ENGELSK_TILLEGGSFORKLARING, FORKLARING, ENGELSK_FORKLARING, SAMMENSETNING, EKSEMPEL, UTTRYKK, ENGELSK_KOMMENTAR
@@ -174,8 +174,6 @@ public class DictItemFactory {
 		List<DictItem> results = new ArrayList<DictItem>();
 		try {
 			String[] phrases = phrasesString.split(Constants.LINE);
-			System.out.println("******************************************");
-			System.out.println(phrasesString);
 			for (int iter = 0; iter < phrases.length;) {
 				String phrase = "", explain = "", temp = phrases[iter];
 				DictItem additional = null;
@@ -203,6 +201,7 @@ public class DictItemFactory {
 						phrase += temp;
 					}
 				}
+				phrase = phrase.trim();
 				++iter;
 				if (additional != null) {
 					while (iter < phrases.length) {
@@ -246,13 +245,13 @@ public class DictItemFactory {
 						additional.setSyllabel(word.substring(BOKMÅL_LENGTH));
 						word = word.replaceAll("\\|", "");
 					}
-					additional.setWord(word.substring(BOKMÅL_LENGTH));
+					word = word.substring(BOKMÅL_LENGTH).trim();
+					additional.setWord(word);
 					explain.trim();
 					additional.setExplain(explain.startsWith(ENGELSK) ? explain : BOKMÅL + explain);
 					
 					results.add(additional);
 				}
-				System.out.println(additional);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

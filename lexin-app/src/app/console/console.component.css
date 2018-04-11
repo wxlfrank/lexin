@@ -1,0 +1,17 @@
+.appConsole {
+  /* display: none; */
+  position: fixed;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  word-wrap: break-word;
+  font-family: monospace;
+  background-color: #3879d8;
+  /* text-transform: none; */
+  padding: 0.5em;
+  /* width: 100%; */
+  color: white;
+  z-index: 4;
+  /* overflow: auto; */
+  height: 10em;
+}
