@@ -1,3 +1,9 @@
 <app-console></app-console>
 <app-search></app-search>
-<app-suggestion></app-suggestion>
+<ul class="list-group suggestions">
+    <app-suggestion class="list-group-item" *ngFor="let suggestion of suggestions"  [suggestion]="suggestion"></app-suggestion>
+</ul>
+<!-- <app-dict-item [results]="results"></app-dict-item> -->
+<ul class="list-group results">
+  <app-dict-item  class="list-group-item"  *ngFor="let result of results" [result]="result"></app-dict-item>
+</ul>

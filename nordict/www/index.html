@@ -18,6 +18,7 @@
     under the License.
 -->
 <html ng-app="NorskDictApp">
+
 <head>
     <!--
     Customize this policy to fit your own app's needs. For more guidance, see:
@@ -29,12 +30,10 @@
             * Enable inline JS: add 'unsafe-inline' to default-src
     -->
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport"
-          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
@@ -50,89 +49,96 @@
     <script type="text/javascript" src="js/NorDictController.js"></script>
     <title>Hello World</title>
 </head>
+
 <body ng-controller="NorskDictCtrl">
-<!--<i class="fa fa-search" id="searchbutton" ng-click="querySelection()"></i>-->
-<div class="appConsole">Console</div>
-<div  id="searcharea">
-    <div id="searchbox">
-        <i class="fa fa-arrow-left vmiddel" ng-show="index > 0" ng-click="back()"></i>
-        <i class="fa fa-arrow-right vmiddel" ng-show="index >= 0 && index < trace.length - 1" ng-click="forward()"></i>
-        <i class="fa fa-search vmiddel" ng-click="queryDict()"></i>
-        <i class="fa fa-times vmiddel righticon"  ng-show="word.length > 0" ng-click="resetWord()"></i>
-        <div class="resizeable vmiddel">
-            <input type="text" class="searchinput" placeholder="Search...." ng-model="word"
-               ng-change="querySuggestions()" ng-keyup="waitforEnter($event)"/>
+    <!--<i class="fa fa-search" id="searchbutton" ng-click="querySelection()"></i>-->
+    <div class="appConsole">Console</div>
+    <div id="searcharea">
+        <div id="searchbox">
+            <i class="fa fa-arrow-left vmiddel" ng-show="index > 0" ng-click="back()"></i>
+            <i class="fa fa-arrow-right vmiddel" ng-show="index >= 0 && index < trace.length - 1" ng-click="forward()"></i>
+            <i class="fa fa-search vmiddel" ng-click="queryDict()"></i>
+            <i class="fa fa-times vmiddel righticon" ng-show="word.length > 0" ng-click="resetWord()"></i>
+            <div class="resizeable vmiddel">
+                <input type="text" class="searchinput" placeholder="Search...." ng-model="word" ng-change="querySuggestions()" ng-keyup="waitforEnter($event)"
+                />
+            </div>
         </div>
     </div>
-</div>
-<div id="suggestions" ng-show="suggestions.length > 0 && queryResults.length === 0">
-    <div ng-repeat="item in suggestions" ng-click="onSelectSuggest(item)" class="suggestion">
-        <!-- <span class="word">{{item.word.real}}</span>
+    <div id="suggestions" ng-show="suggestions.length > 0 && queryResults.length === 0">
+        <div ng-repeat="item in suggestions" ng-click="onSelectSuggest(item)" class="suggestion">
+            <!-- <span class="word">{{item.word.real}}</span>
         {{item.word.eng}} -->
-        <span class="real">{{item.word.real}}</span>
-        <span ng-show="item.word.eng"><span class="language">EN</span>{{item.word.eng}}</span>
-        <span>{{item.word.orginal}}</span>
-    </div>
-</div>
-<div id="result" ng-show="queryResults.length > 0 && suggestions.length === 0">
-    <div class="list-group-item" ng-repeat="item in queryResults">
-        <div class="list-group-item-heading">
-            <div class="word">{{item.word.real}}
-                <i class="fa fa-edit tool" ng-click="setEditing(item)" ng-show="!item.isEditing"></i>
-                <i class="fa tool" ng-class="item.favorite == true ? 'fa-heart' : 'fa-heart-o'" ng-click="favorite(item)"></i></div>
-                <div class="emptyclear"></div>
-            <div>
-                <span class="syllabel" ng-show="item.syllabel.length > 0 && item.syllabel.indexof('|') > -1">{{item.syllabel}}</span>
-                <span class="sound" ng-show="item.sound.length > 0">{{item.sound}}</span>
-                <span class="clazz" ng-show="item.clazz.length > 0">{{item.clazz}}</span>
-                <span ng-show="item.word.eng"><span class="language">EN</span>{{item.word.eng}}</span>
-            </div>
-            <div class="format" ng-show="item.format.length > 0">{{item.format}}</div>
-            <div class="alter" ng-show="item.alternatives.length > 0"><span class="tag">Alternativer</span>
-                {{item.alternatives}}
-            </div>
+            <span class="real">{{item.word.real}}</span>
+            <span ng-show="item.word.eng">
+                <span class="language">EN</span>{{item.word.eng}}</span>
+            <span>{{item.word.orginal}}</span>
         </div>
-        <section>
-            <div class="tag">Forklaring</div>
-            <ul class="explain">
-                <li ng-repeat="explain in item.explain">{{explain}}</li>
-            </ul>
-        </section>
-        <section ng-show="item.myDict.length > 0 || item.isEditing">
-            <div class="tag">Min forklaring</div>
-            <div class="list-group-item-text explain" ng-show="!item.isEditing">
-                <span>{{item.myDict}}</span>
-            </div>
-            <div class="list-group-item-text explain" ng-show="item.isEditing">
-                <textarea class="myexplain" ng-model="item.tempDict"></textarea>
-                <a class="btn save" ng-click="addExplain(item)">Lagre</a> <a class="btn cancel" ng-click="setEditing(item)">Avbryt</a>
-                <div class="empty"></div>
-            </div>
-        </section>
-        <section ng-show="item.examples.length > 0">
-            <div class="tag">Eksempler</div>
-            <ul class="examples">
-                <li ng-repeat="example in item.examples">{{example}}</li>
-            </ul>
-        </section>
-        <section ng-show="item.phrases.length > 0">
-            <div class="tag">Uttrykk</div>
-            <ul>
-                <li ng-repeat="phrase in item.phrases">
-                    <div class="tag">{{phrase[0]}}</div>
-                    <span class="uttrykk">{{phrase[1]}}</span>
-                </li>
-            </ul>
-        </section>
-        <section ng-show="item.composite.length > 0">
-            <div class="tag">Sammensetninger</div>
-            <ul class="composite">
-                <li ng-repeat="compo in item.composite"> {{compo}}</li>
-            </ul>
-        </section>
     </div>
-</div>
+    <div id="result" ng-show="queryResults.length > 0 && suggestions.length === 0">
+        <div class="list-group-item" ng-repeat="item in queryResults">
+            <div class="list-group-item-heading">
+                <div class="word">{{item.word.real}}
+                    <i class="fa fa-edit tool" ng-click="setEditing(item)" ng-show="!item.isEditing"></i>
+                    <i class="fa tool" ng-class="item.favorite == true ? 'fa-heart' : 'fa-heart-o'" ng-click="favorite(item)"></i>
+                </div>
+                <div class="emptyclear"></div>
+                <div>
+                    <span class="syllabel" ng-show="item.syllabel.length > 0 && item.syllabel.indexof('|') > -1">{{item.syllabel}}</span>
+                    <span class="sound" ng-show="item.sound.length > 0">{{item.sound}}</span>
+                    <span class="clazz" ng-show="item.clazz.length > 0">{{item.clazz}}</span>
+                    <span ng-show="item.word.eng">
+                        <span class="language">EN</span>{{item.word.eng}}</span>
+                </div>
+                <div class="format" ng-show="item.format.length > 0">{{item.format}}</div>
+                <div class="alter" ng-show="item.alternatives.length > 0">
+                    <span class="tag">Alternativer</span>
+                    {{item.alternatives}}
+                </div>
+            </div>
+            <section>
+                <div class="tag">Forklaring</div>
+                <ul class="explain">
+                    <li ng-repeat="explain in item.explain">{{explain}}</li>
+                </ul>
+            </section>
+            <section ng-show="item.myDict.length > 0 || item.isEditing">
+                <div class="tag">Min forklaring</div>
+                <div class="list-group-item-text explain" ng-show="!item.isEditing">
+                    <span>{{item.myDict}}</span>
+                </div>
+                <div class="list-group-item-text explain" ng-show="item.isEditing">
+                    <textarea class="myexplain" ng-model="item.tempDict"></textarea>
+                    <a class="btn save" ng-click="addExplain(item)">Lagre</a>
+                    <a class="btn cancel" ng-click="setEditing(item)">Avbryt</a>
+                    <div class="empty"></div>
+                </div>
+            </section>
+            <section ng-show="item.examples.length > 0">
+                <div class="tag">Eksempler</div>
+                <ul class="examples">
+                    <li ng-repeat="example in item.examples">{{example}}</li>
+                </ul>
+            </section>
+            <section ng-show="item.phrases.length > 0">
+                <div class="tag">Uttrykk</div>
+                <ul>
+                    <li ng-repeat="phrase in item.phrases">
+                        <div class="tag">{{phrase[0]}}</div>
+                        <span class="uttrykk">{{phrase[1]}}</span>
+                    </li>
+                </ul>
+            </section>
+            <section ng-show="item.composite.length > 0">
+                <div class="tag">Sammensetninger</div>
+                <ul class="composite">
+                    <li ng-repeat="compo in item.composite"> {{compo}}</li>
+                </ul>
+            </section>
+        </div>
+    </div>
 
 
 </body>
+
 </html>

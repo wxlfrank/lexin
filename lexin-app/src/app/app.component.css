@@ -1,0 +1,23 @@
+.suggestions {
+  position: absolute;
+  /* max-height: 85vh; */
+  top: 72px;
+  left: 8px;
+  right: 8px;
+  z-index: 11;
+  border: solid 2px #3879d8;
+  border-radius: 20px;
+  color: #3879d8;
+  background-color: white;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  -ms-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+.suggestions .suggestion:hover {
+  color: white;
+  background-color: #3879d8;
+  border-radius: 15px;
+}

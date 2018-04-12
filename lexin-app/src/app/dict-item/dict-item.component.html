@@ -1,0 +1,63 @@
+<div id="result">
+        <div class="list-group-result-heading">
+            <div class="word">{{result.word}}
+                <i class="fa fa-edit tool"></i>
+                <i class="fa tool"></i>
+            </div>
+            <div class="emptyclear"></div>
+            <div>
+                <span class="syllabel" ng-show="result.syllabel.length > 0 && result.syllabel.indexof('|') > -1">{{result.syllabel}}</span>
+                <span class="sound" ng-show="result.sound.length > 0">{{result.sound}}</span>
+                <span class="clazz" ng-show="result.clazz.length > 0">{{result.clazz}}</span>
+                <span class="language">EN</span>{{result.word}}
+            </div>
+            <div class="format" ng-show="result.format.length > 0">{{result.format}}</div>
+            <div class="alter" ng-show="result.alternatives.length > 0">
+                <span class="tag">Alternativer</span>
+                {{result.alternative}}
+            </div>
+        </div>
+        <section>
+            <div class="tag">Forklaring</div>
+            <ul class="explain">
+                <!-- <li *ngFor="let explain of result.explain">{{explain}}</li> -->
+                {{result.explain}}
+            </ul>
+        </section>
+        <section ng-show="result.myDict.length > 0 || result.isEditing">
+            <div class="tag">Min forklaring</div>
+            <!-- <div class="list-group-result-text explain" ng-show="!result.isEditing">
+                <span>{{result.myDict}}</span>
+            </div> -->
+            <div class="list-group-result-text explain" ng-show="result.isEditing">
+                <textarea class="myexplain" ng-model="result.tempDict"></textarea>
+                <a class="btn save" ng-click="addExplain(result)">Lagre</a>
+                <a class="btn cancel" ng-click="setEditing(result)">Avbryt</a>
+                <div class="empty"></div>
+            </div>
+        </section>
+        <section ng-show="result.examples.length > 0">
+            <div class="tag">Eksempler</div>
+            <ul class="examples">
+                <!-- <li *ngFor="let example of result.examples">{{example}}</li> -->
+                {{result.examples}}
+            </ul>
+        </section>
+        <section ng-show="result.phrases.length > 0">
+            <div class="tag">Uttrykk</div>
+            <ul>
+                <!-- <li *ngFor="let phrase of result.phrases">
+                    <div class="tag">{{phrase[0]}}</div>
+                    <span class="uttrykk">{{phrase[1]}}</span>
+                </li> -->
+                {{result.phrases}}
+            </ul>
+        </section>
+        <section ng-show="result.composite.length > 0">
+            <div class="tag">Sammensetninger</div>
+            <ul class="composite">
+                <!-- <li *ngFor="let compo of result.composite"> {{compo}}</li> -->
+                {{result.composite}}
+            </ul>
+        </section>
+</div>
